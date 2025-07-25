@@ -1,3 +1,5 @@
+"use client"
+
 import "./History.css"
 
 const History = ({ history }) => {
@@ -15,7 +17,7 @@ const History = ({ history }) => {
           ))}
         </div>
       ) : (
-        <div className="no-history">No history yet. Play a round!</div>
+        <p className="no-history">No history yet. Play a round!</p>
       )}
     </div>
   )
