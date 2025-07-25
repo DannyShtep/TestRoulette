@@ -15,7 +15,7 @@ services:
       - key: DATABASE_URL
         value: postgresql://admin:aLqNou9NGyaVk0g8roYnBsmPXDSiLz9R@dpg-d1ftqqali9vc739vuieg-a.oregon-postgres.com/roulette_jnfa
       - key: FRONTEND_URL
-        value: https://roulette-frontend.onrender.com
+        value: https://frontend-f4rf.onrender.com # Обновлено на ваш URL фронтенда
   - type: static
     name: roulette-frontend
     rootDir: ./frontend
@@ -23,4 +23,4 @@ services:
     staticPublishPath: ./build
     envVars:
       - key: REACT_APP_API_URL
-        value: https://roulette-backend.onrender.com
+        value: https://backend-bse2.onrender.com # Обновлено на ваш URL бэкенда
