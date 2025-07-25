@@ -1,60 +1,61 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Auth.css';
+"use client"
 
-const Login = ({ setUser }) => {
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import "./Auth.css"
+
+// Изменено: теперь принимает onLogin вместо setUser
+const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+    username: "",
+    password: "",
+  })
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-    setError('');
-  };
+      [e.target.name]: e.target.value,
+    })
+    setError("")
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setError("")
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      
-      console.log('Sending login request to:', `${API_URL}/api/auth/login`);
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000"
+
+      console.log("Sending login request to:", `${API_URL}/api/auth/login`)
 
       const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
-      });
+        body: JSON.stringify(formData),
+      })
 
-      const data = await response.json();
-      console.log('Login response:', data);
+      const data = await response.json()
+      console.log("Login response:", data)
 
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        setUser(data.user);
-        alert(`Welcome back, ${data.user.username}!`);
+        // Изменено: вызываем onLogin, который является handleLogin из App.js
+        onLogin(data.user, data.token)
+        alert(`Welcome back, ${data.user.username}!`)
       } else {
-        setError(data.error || 'Login failed');
+        setError(data.error || "Login failed")
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError(`Connection failed: ${error.message}`);
+      console.error("Login error:", error)
+      setError(`Connection failed: ${error.message}`)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="auth-container">
@@ -72,7 +73,7 @@ const Login = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-          
+
           <div className="form-group">
             <input
               type="password"
@@ -86,26 +87,24 @@ const Login = ({ setUser }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
-          
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? 'Signing In...' : 'Login'}
+
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Signing In..." : "Login"}
           </button>
         </form>
-        
+
         <div className="auth-links">
-          <p>Don't have an account? <Link to="/register">Register here</Link></p>
+          <p>
+            Don't have an account? <Link to="/register">Register here</Link>
+          </p>
         </div>
 
         <div className="debug-info">
-          <small>API URL: {process.env.REACT_APP_API_URL || 'Not set'}</small>
+          <small>API URL: {process.env.REACT_APP_API_URL || "Not set"}</small>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
