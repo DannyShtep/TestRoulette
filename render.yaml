@@ -1,3 +1,4 @@
+spec: 1
 services:
   - type: web
     name: roulette-backend
@@ -15,7 +16,6 @@ services:
         value: postgresql://admin:aLqNou9NGyaVk0g8roYnBsmPXDSiLz9R@dpg-d1ftqqali9vc739vuieg-a.oregon-postgres.render.com/roulette_jnfa
       - key: FRONTEND_URL
         value: https://roulette-frontend.onrender.com
-
   - type: static
     name: roulette-frontend
     rootDir: ./frontend
