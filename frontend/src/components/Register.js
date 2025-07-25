@@ -1,83 +1,83 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Auth.css';
+"use client"
 
-const Register = ({ setUser }) => {
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import "./Auth.css"
+
+// Изменено: теперь принимает onLogin вместо setUser
+const Register = ({ onLogin }) => {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
-    });
-    setError(''); // Очистить ошибку при изменении полей
-  };
+      [e.target.name]: e.target.value,
+    })
+    setError("") // Очистить ошибку при изменении полей
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+    e.preventDefault()
+    setLoading(true)
+    setError("")
 
     // Валидация
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
+      setError("Passwords do not match")
+      setLoading(false)
+      return
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      setLoading(false);
-      return;
+      setError("Password must be at least 6 characters long")
+      setLoading(false)
+      return
     }
 
     try {
       // Определяем URL backend
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-      
-      console.log('Sending registration request to:', `${API_URL}/api/auth/register`);
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000"
+
+      console.log("Sending registration request to:", `${API_URL}/api/auth/register`)
 
       const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           username: formData.username,
           email: formData.email,
-          password: formData.password
-        })
-      });
+          password: formData.password,
+        }),
+      })
 
-      const data = await response.json();
-      console.log('Registration response:', data);
+      const data = await response.json()
+      console.log("Registration response:", data)
 
       if (response.ok) {
-        // Сохраняем токен и данные пользователя
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        setUser(data.user);
-        
+        // Изменено: вызываем onLogin, который является handleLogin из App.js
+        onLogin(data.user, data.token)
+
         // Показываем успешное сообщение
-        alert(`Welcome, ${data.user.username}! Registration successful!`);
+        alert(`Welcome, ${data.user.username}! Registration successful!`)
       } else {
-        setError(data.error || 'Registration failed');
+        setError(data.error || "Registration failed")
       }
     } catch (error) {
-      console.error('Registration error:', error);
-      setError(`Connection failed: ${error.message}`);
+      console.error("Registration error:", error)
+      setError(`Connection failed: ${error.message}`)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="auth-container">
@@ -96,7 +96,7 @@ const Register = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-          
+
           <div className="form-group">
             <input
               type="email"
@@ -108,7 +108,7 @@ const Register = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-          
+
           <div className="form-group">
             <input
               type="password"
@@ -121,7 +121,7 @@ const Register = ({ setUser }) => {
               disabled={loading}
             />
           </div>
-          
+
           <div className="form-group">
             <input
               type="password"
@@ -136,26 +136,24 @@ const Register = ({ setUser }) => {
           </div>
 
           {error && <div className="error-message">{error}</div>}
-          
-          <button 
-            type="submit" 
-            className="auth-button"
-            disabled={loading}
-          >
-            {loading ? 'Creating Account...' : 'Register'}
+
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
-        
+
         <div className="auth-links">
-          <p>Already have an account? <Link to="/login">Login here</Link></p>
+          <p>
+            Already have an account? <Link to="/login">Login here</Link>
+          </p>
         </div>
 
         <div className="debug-info">
-          <small>API URL: {process.env.REACT_APP_API_URL || 'Not set'}</small>
+          <small>API URL: {process.env.REACT_APP_API_URL || "Not set"}</small>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register
